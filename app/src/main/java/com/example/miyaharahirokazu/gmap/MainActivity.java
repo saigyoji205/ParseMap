@@ -75,6 +75,7 @@ public class MainActivity extends ActionBarActivity {
                         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(mMyLocation.getLatitude(),mMyLocation.getLongitude()),14.0f);
                         mMap.animateCamera(cameraUpdate);
 
+                        // Parseに現在地を保存
                         point = new ParseGeoPoint(location.getLatitude(),location.getLongitude());
                         placeObject = new ParseObject("PlaceObject");
                         placeObject.put("location",point);
