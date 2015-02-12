@@ -38,6 +38,7 @@ public class MainActivity extends ActionBarActivity {
 
     private static String REVERSE_GEOCODE = "hoge";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
