@@ -18,6 +18,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import org.apache.http.client.methods.HttpGet;
 import org.json.JSONArray;
@@ -38,12 +43,15 @@ public class MainActivity extends ActionBarActivity {
 
     private static String REVERSE_GEOCODE = "hoge";
 
+    private static ParseGeoPoint point = null;
 
+    private static ParseObject placeObject;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Parse.initialize(this, "K3NuRHbthMkVR1yaWIkyLjDxrWVjvSlJFrWgkLZa", "qui5wT6ae6iQG9l5VlJWpdYdH1ji8bk4cnjiWjgf");
 
         mMap = ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
 
@@ -67,8 +75,17 @@ public class MainActivity extends ActionBarActivity {
                         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(mMyLocation.getLatitude(),mMyLocation.getLongitude()),14.0f);
                         mMap.animateCamera(cameraUpdate);
 
+                        point = new ParseGeoPoint(location.getLatitude(),location.getLongitude());
+                        placeObject = new ParseObject("PlaceObject");
+                        placeObject.put("location",point);
+                        try {
+                            placeObject.save();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
                         //　逆ジオコーディングで現在地の住所を取得する
-                        requestReverseGeocode(location.getLatitude(),location.getLongitude());
+                        requestReverseGeocode(location.getLatitude(), location.getLongitude());
                     }
 
                 }
@@ -130,6 +147,7 @@ public class MainActivity extends ActionBarActivity {
             RestTask task = new RestTask(this,REVERSE_GEOCODE);
             task.execute(request);
         }
+
         catch(Exception e)
         {
             e.printStackTrace();
